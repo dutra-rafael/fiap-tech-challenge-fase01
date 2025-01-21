@@ -1,0 +1,6 @@
+@ContatosRegionais_HostAddress = http://localhost:5062
+
+GET {{ContatosRegionais_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
