@@ -1,4 +1,4 @@
-name: Build
+name: Contatos Regionais - Build e Tests - CI
 
 on:
   push:
@@ -27,8 +27,8 @@ jobs:
         with:
           dotnet-version: '8.0.x'
       
-      - name: Build solution
+      - name: Build solution - Contatos Regionais
         run: dotnet build -c Debug
 
-      - name: Run tests
+      - name: Run tests -Contatos Regionais
         run: dotnet test -c Debug --no-build --no-restore
