@@ -1,4 +1,4 @@
-name: FASE 2 - Build e Tests - CI
+name: FASE 2 - Desenvolvimento - Build e Tests - CI
 
 on:
   push:
