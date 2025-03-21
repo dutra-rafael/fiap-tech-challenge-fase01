@@ -45,9 +45,13 @@ jobs:
         #run: dotnet build --configuration Release --no-restore
         run: dotnet restore
 
-      
       - name: Build solution - Contatos Regionais
-        run: dotnet build -c Debug
+        run: dotnet build -c Release --no-restore
+
+      - name: Apply EF Migrations
+        env:
+          ConnectionStrings__DefaultConnection: "Server=localhost,1433;Database=ContatosRegionais;User Id=sa;Password=123Mudar@Fiap02!;"
+        run: dotnet ef database update
 
       - name: Run tests -Contatos Regionais
         run: dotnet test -c Debug --no-build --verbosity normal
