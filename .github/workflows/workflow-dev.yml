@@ -82,7 +82,7 @@ jobs:
           KRB5_CONFIG: $HOME/krb5.conf
           KRB5CCNAME: $HOME/krb5cc
         run: |
-          echo "123Mudar@Fiap02!" | principal@EXAMPLE.COM
+          echo "123Mudar@Fiap02!" | kinit user@localhost
 
       - name: Setup .NET 8
         uses: actions/setup-dotnet@v3
