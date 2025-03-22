@@ -54,18 +54,23 @@ jobs:
         run: |
             sudo kdb5_util create -r EXAMPLE.COM -s -P 123Mudar@Fiap02!
       
-      - name: Reiniciar serviços do Kerberos
-        run: |
-          sudo systemctl restart krb5-kdc
-          sudo systemctl restart krb5-admin-server
+      #- name: Reiniciar serviços do Kerberos
+      #  run: |
+      #    sudo systemctl restart krb5-kdc
+      #    sudo systemctl restart krb5-admin-server
 
-      - name: Define permission
+      - name: Check status service kdc
+        run: |
+          sudo systemctl status krb5-kdc.service
+          sudo journalctl -xeu krb5-kdc.service
+
+      - name: Define permission kdc services
         run: |
           sudo chmod 600 $HOME;krb5kdc/stach
           sudo chown root:root $HOME/krb5kdc/stash
           sudo systemctl restart krb5-kdc
           sudo systemctl restart krb5-admin-server
-          
+
       - name: Adicionar principal no Kerberos
         run: |
           sudo kadmin.local <<EOF
