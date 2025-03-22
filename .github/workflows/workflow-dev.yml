@@ -45,7 +45,8 @@ jobs:
         run: dotnet tool install --global dotnet-ef --version 8.0.11
           
       - name: Add .Net tools to Path
-        run: echo "::add-path::$(dotnet tool path)"
+        run: | 
+          echo "$(dotnet tool path)/bin" >> $GITHUB_PATH
 
       - name: Restore dependencies
         #run: dotnet build --configuration Release --no-restore
