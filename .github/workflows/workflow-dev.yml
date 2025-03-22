@@ -51,26 +51,38 @@ jobs:
       #    klist # valida os tickets ativos
       #  shell: bash
 
-      - name: Generate Kerberos file config
+      #- name: Generate Kerberos file config
+      #  run: |
+      #    echo "[realms]" > $HOME/krb5.conf
+      #    echo "example.com = {" >> $HOME/krb5.conf
+      #    echo " kdc = kdc.example.com" >> $HOME/krb5.conf
+      #    echo " admin_server = admin.example.com" >> $HOME/krb5.conf
+      #    echo "}" >> $HOME/krb5.conf
+      #  shell: bash
+
+      #- name: Exibir arquivo temporário para verificação
+      #  run: cat $HOME/krb5.conf
+      #  shell: bash
+
+      #- name: Usar arquivo de configuração temporário
+      #  env:
+      #    KRB5_CONFIG: $HOME/krb5.conf
+      #  run: |
+      #    # Adicione aqui os comandos da sua aplicação que usam o arquivo krb5.conf
+      #    echo "Usando configuração temporária para krb5"
+      #  shell: bash
+
+      - name: Add Kerberos dependencies
         run: |
-          echo "[realms]" > $HOME/krb5.conf
-          echo "example.com = {" >> $HOME/krb5.conf
-          echo " kdc = kdc.example.com" >> $HOME/krb5.conf
-          echo " admin_server = admin.example.com" >> $HOME/krb5.conf
-          echo "}" >> $HOME/krb5.conf
-        shell: bash
-
-      - name: Exibir arquivo temporário para verificação
-        run: cat $HOME/krb5.conf
-        shell: bash
-
-      - name: Usar arquivo de configuração temporário
+          sudo apt-get update
+          sudo apt-get install -y krb5-user
+      
+      - name: Inicialize kerberos
         env:
           KRB5_CONFIG: $HOME/krb5.conf
+          KRB5CCNAME: $HOME/krb5cc
         run: |
-          # Adicione aqui os comandos da sua aplicação que usam o arquivo krb5.conf
-          echo "Usando configuração temporária para krb5"
-        shell: bash
+          echo "123Mudar@Fiap02!" | principal@EXAMPLE.COM
 
       - name: Setup .NET 8
         uses: actions/setup-dotnet@v3
