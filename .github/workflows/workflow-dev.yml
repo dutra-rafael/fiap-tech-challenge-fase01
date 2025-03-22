@@ -52,7 +52,7 @@ jobs:
 
       - name: Criar arquivo de configuração do KDC
         run: |
-          echo 'DAEMON_ARGS=""' | sudo tee /etc/default/krb5-kdc
+          echo 'DAEMON_ARGS=""' | sudo tee $HOME/default/krb5-kdc
 
       - name: Inicializar banco de dados do KDC
         run: |
