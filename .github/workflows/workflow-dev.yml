@@ -58,7 +58,7 @@ jobs:
       - name: Apply EF Migrations
         env:
           ConnectionStrings__DefaultConnection: "Server=localhost,1433;Database=ContatosRegionais;User Id=sa;Password=123Mudar@Fiap02!;"
-        run: dotnet ef database update
+        run: dotnet ef database update --project ./ContatosRegionais.csproj
 
       - name: Run tests -Contatos Regionais
         run: dotnet test -c Debug --no-build --verbosity normal
