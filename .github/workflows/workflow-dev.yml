@@ -66,9 +66,9 @@ jobs:
       #- name: Install dotnet-ef tool
       #  run: dotnet tool install --global dotnet-ef --version 8.0.11
           
-      #- name: Add .Net tools to Path
-      #  run: | 
-      #    echo "$(dotnet tool path)/bin" >> $GITHUB_PATH
+      - name: Add .Net tools to Path
+        run: | 
+          echo "$(dotnet tool path)/bin" >> $GITHUB_PATH
 
       - name: Apply EF Migrations
         env:
