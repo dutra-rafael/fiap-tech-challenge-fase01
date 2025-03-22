@@ -50,6 +50,10 @@ jobs:
           echo " localhost = EXAMPLE.COM" >> $HOME/krb5.conf
       # echo " example.com = EXAMPLE.COM" >> $HOME/krb5.conf
 
+      - name: Criar arquivo de configuração do KDC
+        run: |
+          echo 'DAEMON_ARGS=""' | sudo tee /etc/default/krb5-kdc
+
       - name: Inicializar banco de dados do KDC
         run: |
             sudo kdb5_util create -r EXAMPLE.COM -s -P 123Mudar@Fiap02!
@@ -59,15 +63,25 @@ jobs:
       #    sudo systemctl restart krb5-kdc
       #    sudo systemctl restart krb5-admin-server
 
-      - name: Check status service kdc
-        run: |
-          sudo systemctl status krb5-kdc.service
-          sudo journalctl -xeu krb5-kdc.service
+      # - name: Check status service kdc
+      #  run: |
+      #    sudo systemctl status krb5-kdc.service
+      #    sudo journalctl -xeu krb5-kdc.service
 
-      - name: Define permission kdc services
+      - name: Corrigir permissões do banco de dados
         run: |
-          sudo chmod 600 $HOME;krb5kdc/stach
-          sudo chown root:root $HOME/krb5kdc/stash
+          sudo chown -R root:root /var/lib/krb5kdc
+          sudo chmod -R 700 /var/lib/krb5kdc
+
+      # - name: Define permission kdc services
+      #  run: |
+      #    sudo chmod 600 $HOME;krb5kdc/stach
+      #    sudo chown root:root $HOME/krb5kdc/stash
+      #    sudo systemctl restart krb5-kdc
+      #    sudo systemctl restart krb5-admin-server
+
+      - name: Reiniciar serviços do Kerberos
+        run: |
           sudo systemctl restart krb5-kdc
           sudo systemctl restart krb5-admin-server
 
