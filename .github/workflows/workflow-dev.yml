@@ -36,18 +36,18 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Configure Kerberos
-        run: |
-          echo "[realms]" >> /etc/krb5.conf
-          echo "example.com" = {" >> /etc/krb5.conf
-          echo " kdc = kdc.example.com" >> /etch/krb5.conf
-          echo " admin_server = admin.example.com" >> /etc/krb5.conf
-          echo "}" >> /etc/krb5.conf
-        shell: bash
+      #- name: Configure Kerberos
+      #  run: |
+      #    echo "[realms]" >> /etc/krb5.conf
+      #    echo "example.com" = {" >> /etc/krb5.conf
+      #    echo " kdc = kdc.example.com" >> /etch/krb5.conf
+      #    echo " admin_server = admin.example.com" >> /etc/krb5.conf
+      #    echo "}" >> /etc/krb5.conf
+      #  shell: bash
 
       - name: Initialize Kerberos
         run: |
-          kinit -V -k -t /path/to/keytab user@example.com
+          kinit -V -k -t /path/to/keytab user@localhost
           klist # valida os tickets ativos
         shell: bash
 
