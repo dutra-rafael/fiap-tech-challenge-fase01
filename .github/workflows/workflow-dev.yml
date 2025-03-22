@@ -63,8 +63,8 @@ jobs:
       - name: Build solution - Contatos Regionais
         run: dotnet build -c Release --no-restore
 
-      #- name: Install dotnet-ef tool
-      #  run: dotnet tool install --global dotnet-ef --version 8.0.11
+      - name: Install dotnet-ef tool
+        run: dotnet tool install --global dotnet-ef --version 8.0.11
           
       - name: Add .Net tools to Path
         run: | 
