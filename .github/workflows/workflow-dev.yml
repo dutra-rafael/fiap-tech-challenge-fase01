@@ -88,7 +88,7 @@ jobs:
 
       - name: Apply EF Migrations
         env:
-          ConnectionStrings__DefaultConnection: "Server=localhost,1433;Database=ContatosRegionais;User Id=sa;Password=123Mudar@Fiap02!;TrustServerCertificate=True;Encrypt=False;Integrated Security=False;"
+          ConnectionStrings__DefaultConnection: "ConnectionStrings__DefaultConnection: Server=localhost,1433;Database=ContatosRegionais;User Id=sa;Password=123Mudar@Fiap02!;TrustServerCertificate=True;Encrypt=False;Authentication=SqlPassword;"
           working-directory: ./ContatosRegionais
         run: dotnet ef database update --project ./ContatosRegionais/ContatosRegionais.csproj
 
