@@ -50,6 +50,10 @@ jobs:
           echo " .example.com = EXAMPLE.COM" >> $HOME/krb5.conf
           echo " example.com = EXAMPLE.COM" >> $HOME/krb5.conf
 
+      - name: Inicializar banco de dados do KDC
+        run: |
+            sudo krb5_newrealm
+            
       - name: Adicionar principal no Kerberos
         run: |
           sudo kadmin.local <<EOF
