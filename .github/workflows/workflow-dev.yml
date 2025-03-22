@@ -53,6 +53,11 @@ jobs:
       - name: Inicializar banco de dados do KDC
         run: |
             sudo kdb5_util create -r EXAMPLE.COM -s -P 123Mudar@Fiap02!
+      
+      - name: Reiniciar serviços do Kerberos
+        run: |
+          sudo systemctl restart krb5-kdc
+          sudo systemctl restart krb5-admin-server
 
       - name: Adicionar principal no Kerberos
         run: |
