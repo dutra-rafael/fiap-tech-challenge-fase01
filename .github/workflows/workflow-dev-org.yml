@@ -1,0 +1,47 @@
+name: .NET CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - develop
+  pull_request:
+    branches:
+      - develop
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    services:
+      mssql:
+        image: mcr.microsoft.com/mssql/server:2022-latest
+        env:
+          ACCEPT_EULA: Y
+          SA_PASSWORD: "123Mudar@Fiap02!"
+        ports:
+          - 1433:1433
+        options: >-
+          --health-cmd "exit 0"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 3
+
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v3
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 8.0.x
+
+    - name: Restore NuGet packages
+      run: dotnet restore
+
+    - name: Build application
+      run: dotnet build --no-restore --configuration Release
+
+    - name: Run integration tests
+      env:
+        ConnectionStrings__DefaultConnection: "Server=localhost,1433;Database=YourDatabaseName;User Id=sa;Password=YourStrongPassword123!"
+      run: dotnet test --no-build --configuration Release
