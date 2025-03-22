@@ -45,11 +45,11 @@ jobs:
       #    echo "}" >> /etc/krb5.conf
       #  shell: bash
 
-      - name: Initialize Kerberos
-        run: |
-          kinit -V -k -t /path/to/keytab user@localhost
-          klist # valida os tickets ativos
-        shell: bash
+      #- name: Initialize Kerberos
+      #  run: |
+      #    kinit -V -k -t /path/to/keytab user@localhost
+      #    klist # valida os tickets ativos
+      #  shell: bash
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
