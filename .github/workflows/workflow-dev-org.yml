@@ -43,5 +43,5 @@ jobs:
 
     - name: Run integration tests
       env:
-        ConnectionStrings__DefaultConnection: "Server=localhost,1433;Database=YourDatabaseName;User Id=sa;Password=YourStrongPassword123!"
+        ConnectionStrings__DefaultConnection: "Server=localhost,1433;Database=ContatosRegionais;User Id=sa;Password=123Mudar@Fiap02!"
       run: dotnet test --no-build --configuration Release
