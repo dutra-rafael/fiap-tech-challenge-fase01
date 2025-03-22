@@ -39,16 +39,16 @@ jobs:
           sudo apt-get install -y krb5-kdc krb5-admin-server
 
       - name: Configurar e inicializar KDC
+      # Criar arquivo krb5.conf no local esperado
         run: |
-          # Criar arquivo krb5.conf no local esperado
           echo "[realms]" > $HOME/krb5.conf
           echo " EXAMPLE.COM = {" >> $HOME/krb5.conf
-          echo "  kdc = kdc.example.com" >> $HOME/krb5.conf
-          echo "  admin_server = admin.example.com" >> $HOME/krb5.conf
+          echo "  kdc = localhost" >> $HOME/krb5.conf
+          echo "  admin_server = localhost" >> $HOME/krb5.conf
           echo " }" >> $HOME/krb5.conf
           echo "[domain_realm]" >> $HOME/krb5.conf
-          echo " .example.com = EXAMPLE.COM" >> $HOME/krb5.conf
-          echo " example.com = EXAMPLE.COM" >> $HOME/krb5.conf
+          echo " localhost = EXAMPLE.COM" >> $HOME/krb5.conf
+      # echo " example.com = EXAMPLE.COM" >> $HOME/krb5.conf
 
       - name: Inicializar banco de dados do KDC
         run: |
@@ -59,6 +59,13 @@ jobs:
           sudo systemctl restart krb5-kdc
           sudo systemctl restart krb5-admin-server
 
+      - name: Define permission
+        run: |
+          sudo chmod 600 $HOME;krb5kdc/stach
+          sudo chown root:root $HOME/krb5kdc/stash
+          sudo systemctl restart krb5-kdc
+          sudo systemctl restart krb5-admin-server
+          
       - name: Adicionar principal no Kerberos
         run: |
           sudo kadmin.local <<EOF
