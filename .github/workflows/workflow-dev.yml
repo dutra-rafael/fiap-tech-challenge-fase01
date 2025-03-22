@@ -36,20 +36,41 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Configure Kerberos
-        run: |
-          echo "[realms]" >> /etc/krb5.conf
-          echo "example.com" = {" >> /etc/krb5.conf
-          echo " kdc = kdc.example.com" >> /etch/krb5.conf
-          echo " admin_server = admin.example.com" >> /etc/krb5.conf
-          echo "}" >> /etc/krb5.conf
-        shell: bash
+      #- name: Configure Kerberos
+      #  run: |
+      #    echo "[realms]" >> /etc/krb5.conf
+      #   echo "example.com" = {" >> /etc/krb5.conf
+      #    echo " kdc = kdc.example.com" >> /etch/krb5.conf
+      #    echo " admin_server = admin.example.com" >> /etc/krb5.conf
+      #    echo "}" >> /etc/krb5.conf
+      #  shell: bash
 
-      - name: Initialize Kerberos
+      #- name: Initialize Kerberos
+      #  run: |
+      #    kinit -V -k -t /path/to/keytab user@localhost
+      #    klist # valida os tickets ativos
+      #  shell: bash
+
+      - name: Generate Kerberos file config
         run: |
-          kinit -V -k -t /path/to/keytab user@localhost
-          klist # valida os tickets ativos
-        shell: bash
+          echo "[realms]" > $HOME/krb5.conf
+          echo "example.com = {" >> $HOME/krb5.conf
+          echo " kdc = kdc.example.com" >> $HOME/krb5.conf
+          echo " admin_server = admin.example.com" >> $HOME/krb5.conf
+          echo "}" >> $HOME/krb5.conf
+        shell: /bin/bash
+
+      - name: Exibir arquivo temporário para verificação
+        run: cat $HOME/krb5.conf
+        shell: /bin/bash
+
+      - name: Usar arquivo de configuração temporário
+        env:
+          KRB5_CONFIG: $HOME/krb5.conf
+        run: |
+          # Adicione aqui os comandos da sua aplicação que usam o arquivo krb5.conf
+          echo "Usando configuração temporária para krb5"
+        shell: /bin/bash
 
       - name: Setup .NET 8
         uses: actions/setup-dotnet@v3
