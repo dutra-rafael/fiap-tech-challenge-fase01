@@ -16,7 +16,7 @@ concurrency:
 jobs:
   build:
     name: Build
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     
     services:
       sqlserver:
@@ -42,7 +42,7 @@ jobs:
           dotnet-version: '8.0.x'
 
       - name: Install dotnet-ef tool
-        run: dotnet tool install --global dotnet-ef
+        run: dotnet tool install --global dotnet-ef --version 8.0.11
           
       - name: Add .Net tools to Path
         run: echo "::add-path::$(dotnet tool path)"
