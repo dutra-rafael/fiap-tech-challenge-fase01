@@ -52,7 +52,7 @@ jobs:
 
       - name: Inicializar banco de dados do KDC
         run: |
-            echo "123Mudar@Fiap02!" | sudo kdb5_util create -r EXAMPLE.COM -s -P 123Mudar@Fiap02!
+            sudo kdb5_util create -r EXAMPLE.COM -s -P 123Mudar@Fiap02!
 
       - name: Adicionar principal no Kerberos
         run: |
