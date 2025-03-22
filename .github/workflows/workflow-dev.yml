@@ -71,6 +71,9 @@ jobs:
       - name: Build solution - Contatos Regionais
         run: dotnet build -c Release --no-restore
 
+      - name: Install dotnet-ef tool
+        run: dotnet tool install --global dotnet-ef --version 8.0.11
+
       - name: Waiting SQL Server ready
         run: |
           for i in {1..30}; do
@@ -78,10 +81,7 @@ jobs:
             echo "Aguardando SQL Server iniciar..."
             sleep 2
           done
-
-      - name: Install dotnet-ef tool
-        run: dotnet tool install --global dotnet-ef --version 8.0.11
-          
+ 
       - name: Add .Net tools to Path
         run: | 
           echo "$(dotnet tool path)/bin" >> $GITHUB_PATH
