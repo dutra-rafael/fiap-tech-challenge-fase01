@@ -73,7 +73,7 @@ jobs:
 
       - name: Waiting SQL Server ready
         run: |
-          for i in (1..30) do
+          for i in {1..30}; do
             /opt/mssql-tools/bin/sqlcmd -S localhost,1433 -U sa -P '123Mudar@Fiap02!' -Q "SELECT 1" && break
             echo "Aguardando SQL Server iniciar..."
             sleep 2
