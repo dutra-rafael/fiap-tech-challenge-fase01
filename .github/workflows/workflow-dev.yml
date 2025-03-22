@@ -39,15 +39,15 @@ jobs:
       - name: Configure Kerberos
         run: |
           echo "[realms]" >> /etc/krb5.conf
-          echo "localhost" = {" >> /etc/krb5.conf
-          echo " kdc = kdc.localhost" >> /etch/krb5.conf
-          echo " admin_server = admin.localhost" >> /etc/krb5.conf
+          echo "example.com" = {" >> /etc/krb5.conf
+          echo " kdc = kdc.example.com" >> /etch/krb5.conf
+          echo " admin_server = admin.example.com" >> /etc/krb5.conf
           echo "}" >> /etc/krb5.conf
         shell: bash
 
       - name: Initialize Kerberos
         run: |
-          kinit -V -k -t /path/to/keytab user@localhost
+          kinit -V -k -t /path/to/keytab user@example.com
           klist # valida os tickets ativos
         shell: bash
 
