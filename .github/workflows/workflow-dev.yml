@@ -56,7 +56,7 @@ jobs:
 
       - name: Inicializar banco de dados do KDC
         run: |
-            sudo kdb5_util create -r EXAMPLE.COM -s -P 123Mudar@Fiap02!
+            sudo kdb5_util create -s -r EXAMPLE.COM -s -P 123Mudar@Fiap02!
       
       #- name: Reiniciar serviços do Kerberos
       #  run: |
@@ -70,21 +70,21 @@ jobs:
 
       - name: Corrigir permissões do banco de dados
         run: |
-          sudo chown -R root:root /var/lib/krb5kdc
-          sudo chmod -R 700 /var/lib/krb5kdc
           sudo chmod 600 /etc/krb5kdc/stash
-
+          sudo chown root:root /etc/krb5kdc/stash
+          
       # - name: Define permission kdc services
       #  run: |
       #    sudo chmod 600 $HOME;krb5kdc/stach
       #    sudo chown root:root $HOME/krb5kdc/stash
       #    sudo systemctl restart krb5-kdc
       #    sudo systemctl restart krb5-admin-server
+
       - name: Verificar status e logs
         run: |
           sudo systemctl status krb5-kdc
           sudo journalctl -xeu krb5-kdc.service
-          
+
       - name: Reiniciar serviços do Kerberos
         run: |
           sudo systemctl restart krb5-kdc
