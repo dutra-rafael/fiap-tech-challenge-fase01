@@ -41,7 +41,7 @@ jobs:
       - name: Configurar e inicializar KDC
       # Criar arquivo krb5.conf no local esperado
         run: |
-          echo "[realms]" > | sudo  tee /etc/krb5.conf
+          echo "[realms]" | sudo  tee /etc/krb5.conf
           echo " EXAMPLE.COM = {" | sudo tee -a /etc/krb5.conf
           echo "  kdc = localhost" | sudo tee -a /etc/krb5.conf
           echo "  admin_server = localhost" | sudo tee -a /etc/krb5.conf
