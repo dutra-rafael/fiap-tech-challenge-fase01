@@ -41,6 +41,12 @@ jobs:
         with:
           dotnet-version: '8.0.x'
 
+      - name: Install dotnet-ef tool
+        run: dotnet tool install --global dotnet-ef
+          
+      - name: Add .Net tools to Path
+        run: echo "::add-path::$(dotnet tool path)"
+
       - name: Restore dependencies
         #run: dotnet build --configuration Release --no-restore
         run: dotnet restore
@@ -48,9 +54,6 @@ jobs:
       - name: Build solution - Contatos Regionais
         run: dotnet build -c Release --no-restore
 
-      - name: Install dotnet-ef tool
-        run: dotnet tool install --global dotnet-ef
-        
       - name: Apply EF Migrations
         env:
           ConnectionStrings__DefaultConnection: "Server=localhost,1433;Database=ContatosRegionais;User Id=sa;Password=123Mudar@Fiap02!;"
