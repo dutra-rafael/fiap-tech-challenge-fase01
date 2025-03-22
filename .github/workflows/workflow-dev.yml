@@ -41,18 +41,18 @@ jobs:
       - name: Configurar e inicializar KDC
       # Criar arquivo krb5.conf no local esperado
         run: |
-          echo "[realms]" > $HOME/krb5.conf
-          echo " EXAMPLE.COM = {" >> $HOME/krb5.conf
-          echo "  kdc = localhost" >> $HOME/krb5.conf
-          echo "  admin_server = localhost" >> $HOME/krb5.conf
-          echo " }" >> $HOME/krb5.conf
-          echo "[domain_realm]" >> $HOME/krb5.conf
-          echo " localhost = EXAMPLE.COM" >> $HOME/krb5.conf
+          echo "[realms]" > /etc/krb5.conf
+          echo " EXAMPLE.COM = {" >> /etc/krb5.conf
+          echo "  kdc = localhost" >>/etc/krb5.conf
+          echo "  admin_server = localhost" >> /etc/krb5.conf
+          echo " }" >>/etc/krb5.conf
+          echo "[domain_realm]" >> /etc/krb5.conf
+          echo " localhost = EXAMPLE.COM" >> /etc/krb5.conf
       # echo " example.com = EXAMPLE.COM" >> $HOME/krb5.conf
 
       - name: Criar arquivo de configuração do KDC
         run: |
-          echo 'DAEMON_ARGS=""' | sudo tee $HOME/default/krb5-kdc
+          echo 'DAEMON_ARGS=""' | sudo tee /etc/default/krb5-kdc
 
       - name: Inicializar banco de dados do KDC
         run: |
