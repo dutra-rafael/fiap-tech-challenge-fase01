@@ -1,4 +1,4 @@
-name: FASE 2 - Desenvolvimento - Build e Tests - CI
+name: FASE 2 - DESENVOLVIMENTO - BUILD e TEST - CI
 
 on:
   push:
@@ -9,114 +9,111 @@ on:
       - '!main'
   workflow_dispatch:
 
-concurrency: 
-  group: ${{ github.workflow }}-${{ github.ref }}
+concurrency:
+  group: ${{github.workflow}}-${{github.ref}}
   cancel-in-progress: true
 
 jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
-    
+
     services:
-      sqlserver:
-        image: mcr.microsoft.com/mssql/server:2022-latest
-        env:
-          ACCEPT_EULA: "Y"
-          SA_PASSWORD: "123Mudar@Fiap02!"
-        ports: 
-          - 1433:1433
-        options: >-
-          --health-cmd "exit 0"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 3
+        sqlserver:
+          image: mcr.microsoft.com/mssql/server:2022-latest
+          env:
+            ACCEPT_EULA: "Y"
+            SA_PASSWORD: "123Mudar@Fiap02!"
+          ports:
+            - 1433:1433
+          options: >-
+            --health-cmd "exit 0"
+            --health-interval 10s
+            --health-timeout 5s
+            --health-retries 3
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      #- name: Initialize Kerberos
-      #  run: |
-      #    kinit -V -k -t /path/to/keytab user@localhost
-      #    klist # valida os tickets ativos
-      #  shell: bash
-
-
-      #- name: Exibir arquivo temporário para verificação
-      #  run: cat $HOME/krb5.conf
-      #  shell: bash
-
-      #- name: Usar arquivo de configuração temporário
-      #  env:
-      #    KRB5_CONFIG: $HOME/krb5.conf
-      #  run: |
-      #    # Adicione aqui os comandos da sua aplicação que usam o arquivo krb5.conf
-      #    echo "Usando configuração temporária para krb5"
-      #  shell: bash
-
-      - name: Add Kerberos dependencies
+      - name: Instalar pacotes do Kerberos
         run: |
           sudo apt-get update
-          sudo apt-get install -y krb5-user
-            #- name: Generate Kerberos file config
+          sudo apt-get install -y krb5-kdc krb5-admin-server
 
-      - name: Configure Kerberos
+      - name: Configurar e inicializar KDC
         run: |
+          # Criar arquivo krb5.conf no local esperado
           echo "[realms]" > $HOME/krb5.conf
-          echo "example.com = {" >> $HOME/krb5.conf
-          echo " kdc = kdc.example.com" >> $HOME/krb5.conf
-          echo " admin_server = admin.example.com" >> $HOME/krb5.conf
-          echo "}" >> $HOME/krb5.conf
-        shell: bash
+          echo " EXAMPLE.COM = {" >> $HOME/krb5.conf
+          echo "  kdc = kdc.example.com" >> $HOME/krb5.conf
+          echo "  admin_server = admin.example.com" >> $HOME/krb5.conf
+          echo " }" >> $HOME/krb5.conf
+          echo "[domain_realm]" >> $HOME/krb5.conf
+          echo " .example.com = EXAMPLE.COM" >> $HOME/krb5.conf
+          echo " example.com = EXAMPLE.COM" >> $HOME/krb5.conf
 
-      - name: Inicialize kerberos
+      - name: Adicionar principal no Kerberos
+        run: |
+          sudo kadmin.local <<EOF
+          addprinc -pw 123Mudar@Fiap02! admin/admin
+          EOF
+
+      - name: Criar ticket de autenticação
         env:
           KRB5_CONFIG: $HOME/krb5.conf
           KRB5CCNAME: $HOME/krb5cc
         run: |
-          echo "123Mudar@Fiap02!" | kinit admin@example.com
+          echo "123Mudar@Fiap02!" | kinit admin/EXAMPLE.COM
+          klist  # Verificar tickets ativos
 
-      - name: Setup .NET 8
-        uses: actions/setup-dotnet@v3
+      - name: Executar aplicação ou testes
+        env:
+          KRB5_CONFIG: $HOME/krb5.conf
+          KRB5CCNAME: $HOME/krb5cc
+        run: |
+          # Adicionar aqui os comandos da aplicação
+          echo "Kerberos configurado com sucesso!"
+
+      - name: Checkout Code
+        uses: actions/checkout@v4
+      
+      - name: Setup .NET8
+        uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
       
-      - name: Configure cache nuget
-        uses: actions/cache@v3
+      - name: Configure chace nuget
+        uses: actions/cache@v4
         with:
           path: ~/.nuget/packages
           key: nuget-${{ runner.os }}-${{ hashFiles('**/packages.lock.json') }}
           restore-keys: |
             nuget-${{runner.os}} -
-
-      - name: Restore dependencies
-        #run: dotnet build --configuration Release --no-restore
+      
+      - name: Restore dependecies
         run: dotnet restore
-
+      
       - name: Build solution - Contatos Regionais
         run: dotnet build -c Release --no-restore
 
-      - name: Install dotnet-ef tool
-        run: dotnet tool install --global dotnet-ef --version 8.0.11
-
+      - name: Install dotnet-ef toll
+        run: dotnet tool install --global dotnet-ef --version 8.0.x
+      
       - name: Waiting SQL Server ready
         run: |
           for i in {1..30}; do
-            /opt/mssql-tools/bin/sqlcmd -S localhost,1433 -U sa -P '123Mudar@Fiap02!' -Q "SELECT 1" && break
+            /opt/mssql-tools/bin/sqlcmd -S localhost,1433 -U admin -P '123Mudar@Fiap02!' -Q "SELECT 1" && break
             echo "Aguardando SQL Server iniciar..."
             sleep 2
           done
- 
+      
       - name: Add .Net tools to Path
-        run: | 
+        run: |
           echo "$(dotnet tool path)/bin" >> $GITHUB_PATH
 
-      - name: Apply EF Migrations
+      - name: Apply EF Migration
         env:
           ConnectionStrings__DefaultConnection: "ConnectionStrings__DefaultConnection: Server=localhost,1433;Database=ContatosRegionais;User Id=sa;Password=123Mudar@Fiap02!;TrustServerCertificate=True;Encrypt=False;Authentication=SqlPassword;"
           working-directory: ./ContatosRegionais
         run: dotnet ef database update --project ./ContatosRegionais/ContatosRegionais.csproj
-
-      - name: Run tests -Contatos Regionais
+      
+      - name: Run tests - Contatos Regionais
         run: dotnet test -c Debug --no-build --verbosity normal
