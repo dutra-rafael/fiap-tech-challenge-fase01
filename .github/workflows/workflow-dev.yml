@@ -36,29 +36,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      #- name: Configure Kerberos
-      #  run: |
-      #    echo "[realms]" >> /etc/krb5.conf
-      #   echo "example.com" = {" >> /etc/krb5.conf
-      #    echo " kdc = kdc.example.com" >> /etch/krb5.conf
-      #    echo " admin_server = admin.example.com" >> /etc/krb5.conf
-      #    echo "}" >> /etc/krb5.conf
-      #  shell: bash
-
       #- name: Initialize Kerberos
       #  run: |
       #    kinit -V -k -t /path/to/keytab user@localhost
       #    klist # valida os tickets ativos
       #  shell: bash
 
-      #- name: Generate Kerberos file config
-      #  run: |
-      #    echo "[realms]" > $HOME/krb5.conf
-      #    echo "example.com = {" >> $HOME/krb5.conf
-      #    echo " kdc = kdc.example.com" >> $HOME/krb5.conf
-      #    echo " admin_server = admin.example.com" >> $HOME/krb5.conf
-      #    echo "}" >> $HOME/krb5.conf
-      #  shell: bash
 
       #- name: Exibir arquivo temporário para verificação
       #  run: cat $HOME/krb5.conf
@@ -76,7 +59,17 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y krb5-user
-      
+            #- name: Generate Kerberos file config
+
+      - name: Configure Kerberos
+        run: |
+          echo "[realms]" > $HOME/krb5.conf
+          echo "example.com = {" >> $HOME/krb5.conf
+          echo " kdc = kdc.example.com" >> $HOME/krb5.conf
+          echo " admin_server = admin.example.com" >> $HOME/krb5.conf
+          echo "}" >> $HOME/krb5.conf
+        shell: bash
+
       - name: Inicialize kerberos
         env:
           KRB5_CONFIG: $HOME/krb5.conf
