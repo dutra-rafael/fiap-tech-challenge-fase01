@@ -58,11 +58,11 @@ jobs:
           echo " kdc = kdc.example.com" >> $HOME/krb5.conf
           echo " admin_server = admin.example.com" >> $HOME/krb5.conf
           echo "}" >> $HOME/krb5.conf
-        shell: /bin/bash
+        shell: bash
 
       - name: Exibir arquivo temporário para verificação
         run: cat $HOME/krb5.conf
-        shell: /bin/bash
+        shell: bash
 
       - name: Usar arquivo de configuração temporário
         env:
@@ -70,7 +70,7 @@ jobs:
         run: |
           # Adicione aqui os comandos da sua aplicação que usam o arquivo krb5.conf
           echo "Usando configuração temporária para krb5"
-        shell: /bin/bash
+        shell: bash
 
       - name: Setup .NET 8
         uses: actions/setup-dotnet@v3
