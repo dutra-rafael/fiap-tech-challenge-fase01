@@ -52,16 +52,9 @@ jobs:
       #  shell: bash
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '8.0.x'
-
-      - name: Install dotnet-ef tool
-        run: dotnet tool install --global dotnet-ef --version 8.0.11
-          
-      - name: Add .Net tools to Path
-        run: | 
-          echo "$(dotnet tool path)/bin" >> $GITHUB_PATH
 
       - name: Restore dependencies
         #run: dotnet build --configuration Release --no-restore
@@ -69,6 +62,13 @@ jobs:
 
       - name: Build solution - Contatos Regionais
         run: dotnet build -c Release --no-restore
+
+      #- name: Install dotnet-ef tool
+      #  run: dotnet tool install --global dotnet-ef --version 8.0.11
+          
+      #- name: Add .Net tools to Path
+      #  run: | 
+      #    echo "$(dotnet tool path)/bin" >> $GITHUB_PATH
 
       - name: Apply EF Migrations
         env:
