@@ -53,7 +53,7 @@ jobs:
         }
 
     - name: Apply Database Migrations
-      working-directory: D:\Estudos\FIAP\FASE 1\Tech Challanger\ContatosRegionais\ # Altere para o diretório do projeto
+      working-directory: D:\Estudos\FIAP\FASE 1\Tech Challanger\ContatosRegionais\ContatosRegionais.Persistencia\ # Altere para o diretório do projeto
       env:
         ConnectionStrings__DefaultConnection: "Server=localhost;Database=ContatosRegionais_Test;User Id=fiap;Password=123Mudar@Fiap02!;"
       run: dotnet ef database update
