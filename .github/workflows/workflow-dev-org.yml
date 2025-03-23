@@ -14,11 +14,18 @@ jobs:
     - name: Check out code
       uses: actions/checkout@v3
 
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: '8.0.x'
-        install-dir: 'D:\dotnet\' # Especifica um diretório alternativo para instalação
+    - name: Download .NET Installer
+      run: |
+        Invoke-WebRequest -Uri https://dot.net/v1/dotnet-install.ps1 -OutFile dotnet-install.ps1
+        powershell -ExecutionPolicy Bypass -File .\dotnet-install.ps1 -Channel 8.0 -InstallDir D:\dotnet
+
+    - name: Add .NET to PATH
+      run: |
+        echo ##[add-path]D:\dotnet
+        echo ##[add-path]D:\dotnet\tools
+
+    - name: Verify .NET Installation
+      run: dotnet --version
 
     - name: Install dependencies
       run: dotnet restore
@@ -34,7 +41,7 @@ jobs:
 
     - name: Apply Database Migrations
       env:
-        ConnectionStrings__DefaultConnection: "Server=localhost;Database=YourDatabase;User Id=sa;Password=YourStrong!Password;"
+        ConnectionStrings__DefaultConnection: "Server=localhost;Database=ContatosRegionais_Test;User Id=safiap;Password=123Mudar@Fiap!;"
       run: dotnet ef database update
 
     - name: Build the application
