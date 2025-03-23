@@ -1,28 +1,48 @@
-name: .NET CI/CD Pipeline
+name: Build and Test .NET 8 Application
 
 on:
   push:
     branches:
       - develop
   pull_request:
-    branches:
-      - develop
 
 jobs:
   build-and-test:
     runs-on: self-hosted
 
+    services:
+      sqlserver:
+        image: mcr.microsoft.com/mssql/server:2022-latest
+        env:
+          SA_PASSWORD: "123Mudar@Fiap02!"
+          ACCEPT_EULA: "Y"
+        ports:
+          - 1433:1433
+        options: >-
+          --health-cmd "exit 0"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 3
+
     steps:
     - name: Check out code
       uses: actions/checkout@v3
 
-    - name: Restore NuGet packages
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '8.0.x'
+
+    - name: Install dependencies
       run: dotnet restore
 
-    - name: Build application
+    - name: Apply Database Migrations
+      env:
+        ConnectionStrings__DefaultConnection: "Server=localhost,1433;Database=ContatosRegionais_Test;User Id=fiap;Password=123Mudar@Fiap02!;"
+      run: dotnet ef database update
+
+    - name: Build the application
       run: dotnet build --no-restore --configuration Release
 
-    - name: Run integration tests
-      env:
-        ConnectionStrings__DefaultConnection: "Server=localhost,1433;Database=ContatosRegionais;User Id=sa;Password=123Mudar@Fiap02!"
-      run: dotnet test --no-build --configuration Release
+    - name: Run unit tests
+      run: dotnet test --no-build --configuration Release --logger trx
