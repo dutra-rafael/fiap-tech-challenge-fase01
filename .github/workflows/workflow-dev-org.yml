@@ -1,4 +1,4 @@
-name: Build and Test .NET 8 Application
+name: Buildando e Testanto - Projeto Contatos Regionais
 
 on:
   push:
@@ -8,6 +8,7 @@ on:
 
 jobs:
   build-and-test:
+    name: Executando workflow self-hosted
     runs-on: self-hosted
 
     steps:
