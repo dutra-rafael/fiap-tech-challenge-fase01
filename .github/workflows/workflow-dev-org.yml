@@ -3,7 +3,7 @@ name: Build and Test .NET 8 Application
 on:
   push:
     branches:
-      - develop
+      - main
   pull_request:
 
 jobs:
@@ -18,6 +18,7 @@ jobs:
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: '8.0.x'
+          install-dir: 'D:\dotnet' # Especifica um diretório alternativo para instalação
 
     - name: Install dependencies
       run: dotnet restore
@@ -33,7 +34,7 @@ jobs:
 
     - name: Apply Database Migrations
       env:
-        ConnectionStrings__DefaultConnection: "Server=localhost;Database=ContatosRegionais_Test;User Id=fiap;Password=123Mudar@Fiap02!;"
+        ConnectionStrings__DefaultConnection: "Server=localhost;Database=YourDatabase;User Id=sa;Password=YourStrong!Password;"
       run: dotnet ef database update
 
     - name: Build the application
