@@ -3,10 +3,11 @@ name: FASE 2 - DESENVOLVIMENTO - BUILD AND TEST - CI
 on:
   push:
     branches:
-      - '*'
-      - '*/*'
-      - '**'
-      - '!main'
+      [hotfix]
+      # - '*'
+      # - '*/*'
+      # - '**'
+      # - '!main'
   workflow_dispatch:
 
 concurrency:
