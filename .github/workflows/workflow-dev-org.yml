@@ -27,21 +27,30 @@ jobs:
     - name: Verify .NET Installation
       run: dotnet --version
 
-    - name: Install dependencies
-      run: dotnet restore
-
     - name: Wait for SQL Server
       run: |
-        echo "Waiting for SQL Server to be ready..."
-        for /L %%i in (1, 60, 1) do (
-          sqlcmd -S localhost -U sa -P "YourStrong!Password" -Q "SELECT 1" && exit /b 0
-          timeout /t 1 >nul
-        )
-        exit /b 1
+        Write-Host "Waiting for SQL Server to be ready..."
+        $attempt = 0
+        $maxAttempts = 60
+        while ($attempt -lt $maxAttempts) {
+          try {
+            Invoke-SqlCmd -ServerInstance "localhost" -Username "fiap" -Password "123Mudar@Fiap02!" -Query "SELECT 1"
+            Write-Host "SQL Server is ready!"
+            break
+          } catch {
+            Write-Host "SQL Server is not ready yet. Retrying in 1 second..."
+            Start-Sleep -Seconds 1
+            $attempt++
+          }
+        }
+        if ($attempt -eq $maxAttempts) {
+          Write-Error "SQL Server did not become ready within the expected time."
+          exit 1
+        }
 
     - name: Apply Database Migrations
       env:
-        ConnectionStrings__DefaultConnection: "Server=localhost;Database=ContatosRegionais_Test;User Id=fiap;Password=123Mudar@Fiap!;"
+        ConnectionStrings__DefaultConnection: "Server=localhost;Database=ContatosRegionais_Test;User Id=fiap;Password=123Mudar@Fiap02!;"
       run: dotnet ef database update
 
     - name: Build the application
