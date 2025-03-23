@@ -59,9 +59,9 @@ jobs:
       run: dotnet ef database update -- --environment Development
 
     - name: Build the application
-      working-directory: ./YourProjectDirectory # Altere para o diretório do projeto
+      working-directory: D:\Estudos\FIAP\FASE 1\Tech Challanger\ContatosRegionais\ # Altere para o diretório do projeto
       run: dotnet build --no-restore --configuration Release
 
     - name: Run unit tests
-      working-directory: ./YourProjectDirectory # Altere para o diretório do projeto
+      working-directory: D:\Estudos\FIAP\FASE 1\Tech Challanger\ContatosRegionais\ # Altere para o diretório do projeto
       run: dotnet test --no-build --configuration Release --logger trx
